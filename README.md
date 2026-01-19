@@ -7,15 +7,15 @@ An AI-powered research assistant that combines natural language processing with 
 - **Natural Language Queries** - Ask questions in plain English
 - **Intelligent Search Detection** - Automatically determines when web search is needed
 - **Real-Time Web Scraping** - Fetches current information via BrightData SERP API
-- **Self-Hosted LLM** - Uses Nosana's decentralized GPU infrastructure for AI inference
+- **OpenAI-Compatible LLM** - Works with Zeabur AI Hub or any OpenAI-compatible API
 - **Beautiful Response Formatting** - Renders markdown with tables, links, and rich formatting
 
 ## Architecture
 
 ```
 ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│   React Frontend │────▶│  FastAPI Backend │────▶│   Nosana LLM    │
-│   (Vite + TS)   │     │   (Python)       │     │   (Ollama API)  │
+│  React Frontend │────▶│  FastAPI Backend │────▶│  Zeabur AI Hub  │
+│   (Vite + TS)   │     │    (Python)      │     │ (OpenAI-compat) │
 └─────────────────┘     └────────┬─────────┘     └─────────────────┘
                                  │
                                  ▼
@@ -39,7 +39,7 @@ An AI-powered research assistant that combines natural language processing with 
 - **react-markdown** - Markdown rendering with GFM support
 
 ### External Services
-- **Nosana** - Decentralized GPU compute for LLM inference
+- **Zeabur AI Hub** - OpenAI-compatible LLM API (or any OpenAI-compatible provider)
 - **BrightData** - Web scraping and SERP API
 
 ## Getting Started
@@ -48,7 +48,7 @@ An AI-powered research assistant that combines natural language processing with 
 
 - Python 3.10+
 - Node.js 18+
-- Nosana endpoint URL
+- Zeabur AI Hub API token (or any OpenAI-compatible API)
 - BrightData API token
 
 ### Installation
@@ -77,8 +77,8 @@ An AI-powered research assistant that combines natural language processing with 
 
    Create a `.env` file in `services/backend/`:
    ```env
-   NOSANA_OLLAMA_URL=your-nosana-endpoint-here
-   NOSANA_MODEL=gpt-oss:20b
+   ZEABUR_API_TOKEN=your-zeabur-api-token-here
+   ZEABUR_MODEL=gpt-4o-mini
    BRIGHTDATA_API_TOKEN=your-brightdata-token-here
    PORT=8000
    ```
@@ -142,7 +142,7 @@ deep_research_agent/
 │   ├── backend/
 │   │   ├── main.py          # FastAPI application entry point
 │   │   ├── agent.py         # WebSearchAgent orchestration logic
-│   │   ├── llm.py           # Nosana LLM client (OpenAI-compatible)
+│   │   ├── llm.py           # Zeabur LLM client (OpenAI-compatible)
 │   │   ├── scraper.py       # BrightData web scraping client
 │   │   ├── requirements.txt # Python dependencies
 │   │   └── .env.example     # Environment template
@@ -160,8 +160,9 @@ deep_research_agent/
 
 | Variable | Description | Required |
 |----------|-------------|----------|
-| `NOSANA_OLLAMA_URL` | Nosana GPU endpoint URL | Yes |
-| `NOSANA_MODEL` | Model name (default: `gpt-oss:20b`) | No |
+| `ZEABUR_API_TOKEN` | Zeabur AI Hub API token | Yes |
+| `ZEABUR_MODEL` | Model name (default: `gpt-4o-mini`) | No |
+| `ZEABUR_BASE_URL` | API base URL (default: `https://sfo1.aihub.zeabur.ai`) | No |
 | `BRIGHTDATA_API_TOKEN` | BrightData API authentication token | Yes |
 | `PORT` | Backend server port (default: 8000) | No |
 
