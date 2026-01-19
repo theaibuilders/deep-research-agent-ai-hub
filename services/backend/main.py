@@ -20,13 +20,13 @@ app.add_middleware(
 )
 
 # Get environment variables
-nosana_url = os.getenv("NOSANA_OLLAMA_URL")
+zeabur_api_key = os.getenv("ZEABUR_API_TOKEN")
 brightdata_token = os.getenv("BRIGHTDATA_API_TOKEN")
-nosana_model = os.getenv("NOSANA_MODEL")
+zeabur_model = os.getenv("ZEABUR_MODEL")
 
-if not nosana_url or not brightdata_token:
+if not zeabur_api_key or not brightdata_token:
     print("❌ Missing environment variables! Check your .env file.")
-    print("Required: NOSANA_OLLAMA_URL, BRIGHTDATA_API_TOKEN")
+    print("Required: ZEABUR_API_TOKEN, BRIGHTDATA_API_TOKEN")
 else:
     print(f"✅ Environment loaded successfully")
 
@@ -37,12 +37,12 @@ agent = None
 def get_agent() -> WebSearchAgent:
     global agent
     if agent is None:
-        if not nosana_url or not brightdata_token:
+        if not zeabur_api_key or not brightdata_token:
             raise HTTPException(
                 status_code=500,
-                detail="Missing environment variables: NOSANA_OLLAMA_URL or BRIGHTDATA_API_TOKEN"
+                detail="Missing environment variables: ZEABUR_API_TOKEN or BRIGHTDATA_API_TOKEN"
             )
-        agent = WebSearchAgent(nosana_url, brightdata_token, nosana_model)
+        agent = WebSearchAgent(zeabur_api_key, brightdata_token, zeabur_model)
     return agent
 
 

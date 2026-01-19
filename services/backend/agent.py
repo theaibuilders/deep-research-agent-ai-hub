@@ -1,11 +1,11 @@
 import json
-from llm import NosanaLLM
+from llm import ZeaburLLM
 from scraper import BrightDataScraper
 
 
 class WebSearchAgent:
-    def __init__(self, nosana_url: str, brightdata_token: str, model: str = None):
-        self.llm = NosanaLLM(nosana_url, model)
+    def __init__(self, zeabur_api_key: str, brightdata_token: str, model: str = None):
+        self.llm = ZeaburLLM(api_key=zeabur_api_key, model=model)
         self.scraper = BrightDataScraper(brightdata_token)
 
     async def run(self, user_query: str) -> str:
