@@ -1,0 +1,497 @@
+# Vibe Code and Deploy a Web Search AI Agent
+
+## Overview
+In this tutorial, you'll build a complete **Deep Research AI Agent** — a full-stack application with a Python FastAPI backend and React frontend that can search the web and provide intelligent answers to your questions. The agent uses an LLM to decide when web search is needed, extracts search queries, fetches real-time results via BrightData's SERP API, and synthesizes comprehensive answers using the RAG (Retrieval-Augmented Generation) pattern.
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                        USER INTERFACE (React)                        │
+│                    "What are the latest AI news?"                    │
+└──────────────────────────────────┬──────────────────────────────────┘
+                                   │
+                                   ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│                      PYTHON BACKEND (FastAPI)                        │
+│  ┌─────────────┐     ┌─────────────┐     ┌─────────────────────┐   │
+│  │   Agent     │────▶│    LLM      │────▶│   Web Scraper       │   │
+│  │ (Orchestrator)│    │  (Brain)    │     │ (BrightData SERP)   │   │
+│  └─────────────┘     └─────────────┘     └─────────────────────┘   │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+## Prerequisites
+
+Before starting, ensure you have:
+
+- **Python 3.10+** installed
+- **Node.js 18+** installed
+- **API Keys** (will be provided at the workshop or get your own):
+  - [Zeabur AI Hub](https://zeabur.com/events?code=BUILDERS0129) - for LLM access (OpenAI-compatible API)
+  - [BrightData](https://get.brightdata.com/aibuilders10) - for web search capabilities
+
+### AI Coding IDEs
+
+Choose your favorite AI-powered coding assistant. Such as Cursor, Claude Code, Open AI Codex, Windsurf, Replit, JetBrains AI Assistant, GitHub Copilot, Tabnine, Sourcegraph Cody, Amazon Q Developer, Aider, Cline, Qoder, CodeGeeX etc.
+
+## Workshop Setup
+
+### Step 1: Create Your Workspace
+
+Open your terminal and create a new empty folder:
+
+```bash
+mkdir deep-research-agent
+```
+
+### Step 2: Open the Folder in Your AI IDE
+
+- **Cursor**: File → Open Folder
+- **VS Code + Copilot**: File → Open Folder
+- **Windsurf**: File → Open Folder
+
+### Step 3: Open the AI Chat Interface
+
+- **Cursor**: Press `Cmd+K` (Mac) or `Ctrl+K` (Windows) for inline, or `Cmd+L` / `Ctrl+L` for chat
+- **GitHub Copilot**: Click the Copilot icon or press `Cmd+I` / `Ctrl+I`
+- **Windsurf**: Press `Cmd+L` / `Ctrl+L` for Cascade
+
+
+
+## Vibe Coding Prompts
+
+Follow these prompts in order. Copy each prompt into your AI coding assistant and let it generate the code!
+
+
+
+### Prompt 1: Project Setup
+
+> **Goal:** Set up the project structure
+
+```
+I want to build a deep research AI agent that can answer questions by searching the web when needed.
+
+The backend will be Python and the frontend will be React. Set up a clean project structure with:
+- A services folder containing backend and frontend directories
+- A Makefile for running common commands
+
+Just create the folder structure for now.
+```
+
+**Expected Output:**
+- `services/backend/` folder created
+- `services/frontend/` folder created
+- Empty `Makefile` created
+
+
+
+### Prompt 2: Backend Setup
+
+> **Goal:** Initialize the Python backend
+
+```
+Set up the Python backend in services/backend/.
+
+I'll need:
+- FastAPI for the web server
+- An async HTTP client for making API calls
+- Environment variable support
+- Data validation
+
+Create the requirements.txt with the necessary dependencies.
+```
+
+**Expected Output:**
+A `requirements.txt` file with FastAPI, uvicorn, httpx, python-dotenv, and pydantic.
+
+
+
+### Prompt 3: Environment Configuration
+
+> **Goal:** Set up environment variables
+
+```
+I need to store API keys for two services:
+1. Zeabur AI Hub - an OpenAI-compatible LLM API (token: ZEABUR_API_TOKEN)
+2. BrightData - a web scraping service (token: BRIGHTDATA_API_TOKEN)
+
+Create a .env.example template and a .env file in the backend folder. Also include a ZEABUR_MODEL variable defaulting to gpt-4o-mini.
+```
+
+**Expected Output:**
+- `.env.example` file with placeholder values
+- `.env` file ready to be filled in
+
+
+
+### Prompt 4: LLM Client
+
+> **Goal:** Create a client to talk to the LLM
+
+```
+I need to communicate with Zeabur AI Hub, which is an OpenAI-compatible API.
+
+Create a Python client in services/backend/llm.py that can:
+- Send prompts and get responses
+- Support conversation history (chat)
+- Handle errors gracefully
+
+The base URL is https://sfo1.aihub.zeabur.ai and it uses the standard OpenAI chat completions format. Use async/await for the HTTP calls.
+```
+
+**Expected Output:**
+A `llm.py` file with a class that can generate text and have conversations with the LLM.
+
+
+
+### Prompt 5: Web Search
+
+> **Goal:** Create a web search capability using BrightData
+
+```
+I want to search the web using BrightData's SERP API.
+
+Create a Python client in services/backend/scraper.py that:
+- Takes a search query and returns Google search results
+- Uses BrightData's API at https://api.brightdata.com/request
+- Returns the parsed search results as JSON
+- Handles errors without crashing
+
+The API uses Bearer token authentication and needs these parameters:
+- zone: "serp_api1"
+- format: "json"
+- data_format: "parsed_light"
+```
+
+**Expected Output:**
+A `scraper.py` file with a class that can search the web and return results.
+
+
+
+### Prompt 6: AI Agent
+
+> **Goal:** Build the intelligent agent that decides when to search
+
+```
+Now I need to build the AI agent that ties everything together.
+
+Create services/backend/agent.py with an agent that:
+1. Receives a user question
+2. Uses the LLM to decide: "Does this need current information from the web?"
+3. If yes: extracts search keywords, searches the web, then answers based on results
+4. If no: answers directly from the LLM's knowledge
+
+The agent should use the LLM client and web scraper we created. Add logging so I can see what the agent is doing at each step.
+```
+
+**Expected Output:**
+An `agent.py` file with an intelligent agent that orchestrates LLM reasoning and web search.
+
+
+
+### Prompt 7: API Server
+
+> **Goal:** Expose the agent as a REST API
+
+```
+Create a FastAPI server in services/backend/main.py that:
+- Has a POST /api/query endpoint that accepts a question and returns the agent's answer
+- Has health check endpoints (GET / and GET /health)
+- Loads the API keys from environment variables
+- Enables CORS so the frontend can call it
+
+The request should be {"query": "..."} and response should be {"answer": "..."}.
+```
+
+**Expected Output:**
+A `main.py` file with a FastAPI server exposing the agent.
+
+
+
+### Prompt 8: Frontend Setup
+
+> **Goal:** Initialize the React frontend
+
+```
+Set up a React TypeScript frontend in services/frontend/ using Vite.
+
+I'll need:
+- React with TypeScript
+- A markdown renderer (react-markdown with remark-gfm) to display formatted AI responses
+- Environment variable support for the API URL
+
+Create all the necessary config files (package.json, vite.config.ts, tsconfig.json, index.html) and the basic entry point files.
+```
+
+**Expected Output:**
+- `package.json` with React and markdown dependencies
+- Vite and TypeScript configuration files
+- `index.html` and `src/main.tsx` entry points
+- `.env` file with `VITE_API_URL=http://localhost:8000`
+
+
+
+### Prompt 9: User Interface
+
+> **Goal:** Build the chat interface
+
+```
+Create the main React component in services/frontend/src/App.tsx.
+
+I want a simple chat interface where users can:
+- Type a question in an input field
+- Click "Ask" (or press Enter) to submit
+- See a loading spinner while waiting
+- See the AI's answer rendered as markdown (with tables, lists, links, etc.)
+- See their recent query history (last 5 questions)
+
+Handle errors gracefully and show error messages to the user.
+```
+
+**Expected Output:**
+An `App.tsx` file with a complete chat interface component.
+
+
+
+### Prompt 10: Styling
+
+> **Goal:** Make it look good
+
+```
+Create modern, professional CSS styling for the frontend in services/frontend/src/App.css.
+
+I want:
+- A gradient background (dark blue to red tones)
+- A clean white card in the center for the content
+- Nice input field and button styling
+- A spinning loader animation
+- Good typography for the markdown content (headers, lists, tables, code blocks)
+- Mobile responsive design
+
+Make it look polished and professional.
+```
+
+**Expected Output:**
+An `App.css` file with complete styling.
+
+
+
+### Prompt 11: Development Commands
+
+> **Goal:** Create convenient commands for development
+
+```
+Create a Makefile in the project root with commands to:
+- Install all dependencies (both backend and frontend)
+- Run the backend server
+- Run the frontend dev server
+- Run both together
+
+Make it easy to get started with just "make install" and "make dev".
+```
+
+**Expected Output:**
+A `Makefile` with install and dev commands for both services.
+
+
+
+## Verification Steps
+
+After generating all the code, verify your project structure matches:
+
+```
+deep-research-agent/
+├── services/
+│   ├── backend/
+│   │   ├── .env
+│   │   ├── .env.example
+│   │   ├── agent.py
+│   │   ├── llm.py
+│   │   ├── main.py
+│   │   ├── requirements.txt
+│   │   └── scraper.py
+│   └── frontend/
+│       ├── src/
+│       │   ├── App.css
+│       │   ├── App.tsx
+│       │   ├── index.css
+│       │   └── main.tsx
+│       ├── .env
+│       ├── index.html
+│       ├── package.json
+│       ├── tsconfig.json
+│       └── vite.config.ts
+└── Makefile
+```
+
+
+
+## Running the Project
+
+### Step 1: Configure Environment Variables
+
+Edit `services/backend/.env` with your actual API keys:
+
+```env
+BRIGHTDATA_API_TOKEN=your-actual-brightdata-token
+ZEABUR_API_TOKEN=your-actual-zeabur-token
+ZEABUR_MODEL=gpt-4o-mini
+PORT=8000
+```
+
+### Step 2: Install Dependencies
+
+```bash
+# Install all dependencies
+make install
+
+# Or install separately:
+cd services/backend && pip3 install -r requirements.txt
+cd services/frontend && npm install
+```
+
+### Step 3: Start the Backend
+
+```bash
+make dev-backend
+# Or: cd services/backend && python3 main.py
+```
+
+You should see:
+```
+✅ Environment loaded successfully
+🔗 Connecting to Zeabur AI Hub: https://sfo1.aihub.zeabur.ai
+🤖 Using model: gpt-4o-mini
+🚀 Web Search AI Agent Server running on http://localhost:8000
+```
+
+### Step 4: Start the Frontend (new terminal)
+
+```bash
+make dev-frontend
+# Or: cd services/frontend && npm run dev
+```
+
+You should see:
+```
+VITE ready in XXX ms
+➜  Local:   http://localhost:5173/
+```
+
+### Step 5: Test the Application
+
+1. Open http://localhost:5173 in your browser
+2. Type a question like "What are the latest developments in AI?"
+3. Click "Ask" and watch the magic happen!
+
+### AI-Generated Code Issues
+
+If the AI generates incorrect code:
+
+1. **Be More Specific**: Add more details to your prompt
+2. **Show Examples**: Include example input/output in your prompt
+3. **Ask for Fixes**: Describe the error and ask for a fix
+4. **Request Explanations**: Ask the AI to explain its code
+5. **Iterate**: Build incrementally, testing each step
+
+**Example Fix Prompt:**
+```
+The agent.py file has an error on line X: [error message]
+Please fix this error. The issue seems to be [your observation].
+```
+
+
+
+## Best Practices for Vibe Coding
+
+### 1. Be Specific and Detailed
+```
+❌ "Create a web scraper"
+✅ "Create a Python class that fetches Google search results via BrightData API using httpx, handles errors gracefully, and returns parsed JSON"
+```
+
+### 2. Provide Context
+```
+✅ "This file will be imported by agent.py which expects a search_web(query) async method"
+```
+
+### 3. Request Comments
+```
+✅ "Include detailed comments explaining the OpenAI API format"
+```
+
+### 4. Specify Technologies
+```
+✅ "Use httpx for async HTTP, not requests"
+✅ "Use useState hooks, not class components"
+```
+
+### 5. Ask for Error Handling
+```
+✅ "Handle HTTP errors, timeouts, and invalid responses gracefully"
+```
+
+### 6. Test Incrementally
+- Test each component before moving to the next
+- Verify imports work
+- Check for syntax errors immediately
+
+### 7. Use Follow-up Prompts
+```
+"The code looks good but it's missing error handling for empty responses. Please add that."
+```
+
+### 8. Keep Chat Context
+- Keep related prompts in the same chat session
+- Reference previous code: "Update the agent.py we just created to add logging"
+
+## Architecture Deep Dive
+
+### AI Agent Pattern
+
+The `WebSearchAgent` implements the **ReAct** (Reasoning + Acting) pattern:
+
+1. **Perceive**: Receive user query
+2. **Reason**: Should I search the web?
+3. **Act**: Execute web search if needed
+4. **Synthesize**: Generate final answer
+
+### RAG (Retrieval-Augmented Generation)
+
+The agent uses RAG to ground LLM responses in real data:
+
+1. **Retrieve**: Fetch search results from the web
+2. **Augment**: Inject results into the prompt as context
+3. **Generate**: LLM creates answer based on retrieved facts
+
+### Why This Architecture?
+
+- **Modularity**: Each component (LLM, Scraper, Agent) is independent
+- **Testability**: Components can be tested in isolation
+- **Flexibility**: Easy to swap LLM providers or search APIs
+- **Scalability**: Async design handles concurrent requests
+
+
+
+## Resources
+
+- **Zeabur AI Hub**: https://zeabur.com/ai
+- **BrightData**: https://brightdata.com
+- **FastAPI Docs**: https://fastapi.tiangolo.com
+- **React Docs**: https://react.dev
+- **Vite Docs**: https://vitejs.dev
+
+
+
+## Congratulations! 🎉
+
+You've successfully vibe-coded a complete AI-powered research agent! This project demonstrates:
+
+- ✅ Python async programming with FastAPI
+- ✅ React frontend with TypeScript
+- ✅ OpenAI-compatible API integration
+- ✅ Web scraping with BrightData
+- ✅ AI Agent architecture (ReAct pattern)
+- ✅ RAG (Retrieval-Augmented Generation)
+- ✅ Full-stack development with AI assistance
+
+**Share your creation and tag us @theaibuildersdev!**
