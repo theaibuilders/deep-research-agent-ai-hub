@@ -136,9 +136,10 @@ class QueryRequest(BaseModel):
     Request body for the /api/query endpoint.
     
     Example JSON:
-    {"query": "What is the weather today?"}
+    {"query": "What is the weather today?", "use_web_search": true}
     """
     query: str  # The user's question (required)
+    use_web_search: bool = True  # Whether to use web search (optional, defaults to True)
 
 
 class QueryResponse(BaseModel):
@@ -222,7 +223,8 @@ async def process_query(request: QueryRequest):
         agent_instance = get_agent()
         
         # Process query through agent (async call)
-        answer = await agent_instance.run(request.query)
+        # Pass the use_web_search preference to the agent
+        answer = await agent_instance.run(request.query, use_web_search=request.use_web_search)
         
         # Return structured response
         return QueryResponse(answer=answer)

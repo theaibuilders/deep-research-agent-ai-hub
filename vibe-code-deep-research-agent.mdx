@@ -3,6 +3,10 @@
 ## Overview
 In this tutorial, you'll build a complete **Deep Research AI Agent** — a full-stack application with a Python FastAPI backend and React frontend that can search the web and provide intelligent answers to your questions. The agent uses an LLM to decide when web search is needed, extracts search queries, fetches real-time results via BrightData's SERP API, and synthesizes comprehensive answers using the RAG (Retrieval-Augmented Generation) pattern.
 
+**New Feature:** The application includes a user-controlled "Web Search" checkbox that lets you toggle between:
+- **Enabled**: Agent searches the web using BrightData and synthesizes information
+- **Disabled**: Agent relies only on the LLM model's knowledge without web search
+
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
 │                        USER INTERFACE (React)                        │
@@ -55,13 +59,9 @@ mkdir deep-research-agent
 - **GitHub Copilot**: Click the Copilot icon or press `Cmd+I` / `Ctrl+I`
 - **Windsurf**: Press `Cmd+L` / `Ctrl+L` for Cascade
 
-
-
 ## Vibe Coding Prompts
 
 Follow these prompts in order. Copy each prompt into your AI coding assistant and let it generate the code!
-
-
 
 ### Prompt 1: Project Setup
 
@@ -294,6 +294,38 @@ A `Makefile` with install and dev commands for both services.
 
 
 
+### Prompt 12: Add Web Search Toggle (New Feature)
+
+> **Goal:** Add user control over web search functionality
+
+```
+Add a "Web Search" checkbox to the frontend that allows users to control whether the AI agent uses BrightData for web search.
+
+Frontend changes (services/frontend/src/App.tsx):
+- Add a checkbox state (useWebSearch) that defaults to true
+- Add a checkbox UI above the input field with a clear label and description
+- Send the checkbox state (use_web_search) in the API request body
+- Update the loading message to show different text based on whether web search is enabled
+
+Backend changes (services/backend/main.py):
+- Update the QueryRequest model to accept an optional use_web_search boolean (defaults to True)
+- Pass this parameter to the agent
+
+Backend changes (services/backend/agent.py):
+- Update the run() method to accept a use_web_search parameter
+- If use_web_search is False, skip all web search logic and answer directly with the LLM
+- Add logging to show whether web search is enabled or disabled
+
+This feature lets users compare answers with and without web search.
+```
+
+**Expected Output:**
+- Updated `App.tsx` with a "Web Search" checkbox
+- Updated `main.py` with the new request parameter
+- Updated `agent.py` with conditional web search logic
+
+
+
 ## Verification Steps
 
 After generating all the code, verify your project structure matches:
@@ -380,8 +412,27 @@ VITE ready in XXX ms
 ### Step 5: Test the Application
 
 1. Open http://localhost:5173 in your browser
-2. Type a question like "What are the latest developments in AI?"
-3. Click "Ask" and watch the magic happen!
+2. You'll see a "Web Search" checkbox (checked by default)
+3. Type a question like "What are the latest developments in AI?"
+4. Click "Ask" and watch the magic happen!
+
+### Step 6: Test the Web Search Toggle
+
+Try these comparisons to see the difference:
+
+**With Web Search Enabled (checkbox checked):**
+- "What's the weather in San Francisco today?" → Gets current weather data
+- "What is the current price of Bitcoin?" → Gets latest price
+- "Best Thai restaurants in San Francisco" → Gets current reviews
+
+**With Web Search Disabled (checkbox unchecked):**
+- Same questions → Gets general information without real-time data
+- "What is the capital of France?" → Answers directly from LLM knowledge
+- "Explain quantum computing" → Answers from training data
+
+**Testing Agent Intelligence:**
+- Keep checkbox checked and ask "What is 2+2?"
+- Notice the agent skips web search even though it's enabled (smart reasoning!)
 
 ### AI-Generated Code Issues
 
@@ -448,12 +499,13 @@ Please fix this error. The issue seems to be [your observation].
 
 ### AI Agent Pattern
 
-The `WebSearchAgent` implements the **ReAct** (Reasoning + Acting) pattern:
+The `WebSearchAgent` implements the **ReAct** (Reasoning + Acting) pattern with user control:
 
-1. **Perceive**: Receive user query
-2. **Reason**: Should I search the web?
-3. **Act**: Execute web search if needed
-4. **Synthesize**: Generate final answer
+1. **Perceive**: Receive user query and web search preference
+2. **Check Preference**: If web search disabled, answer directly
+3. **Reason**: Should I search the web? (if enabled)
+4. **Act**: Execute web search if needed
+5. **Synthesize**: Generate final answer
 
 ### RAG (Retrieval-Augmented Generation)
 
@@ -469,6 +521,7 @@ The agent uses RAG to ground LLM responses in real data:
 - **Testability**: Components can be tested in isolation
 - **Flexibility**: Easy to swap LLM providers or search APIs
 - **Scalability**: Async design handles concurrent requests
+- **User Control**: Web search toggle provides transparency and control over data sources
 
 
 
@@ -492,6 +545,18 @@ You've successfully vibe-coded a complete AI-powered research agent! This projec
 - ✅ Web scraping with BrightData
 - ✅ AI Agent architecture (ReAct pattern)
 - ✅ RAG (Retrieval-Augmented Generation)
+- ✅ User-controlled feature toggles
 - ✅ Full-stack development with AI assistance
+
+## Next Steps
+
+Want to extend your agent? Try these ideas:
+
+- Add source citations showing which websites were used
+- Implement streaming responses for real-time answers
+- Add conversation memory to maintain context across queries
+- Support multiple search engines (Google, Bing, DuckDuckGo)
+- Add user authentication and query history storage
+- Deploy to production (Zeabur, Vercel, Railway, etc.)
 
 **Share your creation and tag us @theaibuildersdev!**

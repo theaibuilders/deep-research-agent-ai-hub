@@ -5,6 +5,7 @@ An AI-powered research assistant that combines natural language processing with 
 ## Features
 
 - **Natural Language Queries** - Ask questions in plain English
+- **Web Search Toggle** - User-controlled checkbox to enable/disable web search functionality
 - **Intelligent Search Detection** - Automatically determines when web search is needed
 - **Real-Time Web Scraping** - Fetches current information via BrightData SERP API
 - **OpenAI-Compatible LLM** - Works with Zeabur AI Hub or any OpenAI-compatible API
@@ -102,6 +103,28 @@ make dev-backend
 make dev-frontend
 ```
 
+## Using the Application
+
+1. Open your browser to http://localhost:5173
+2. Toggle the **"Web Search"** checkbox:
+   - ✅ **Checked (default)**: Agent uses BrightData to search the web and synthesizes information
+   - ⬜ **Unchecked**: Agent relies only on the LLM model's knowledge without web search
+3. Enter your question in the text field
+4. Click "Ask" or press Enter
+5. Watch as the agent researches and generates your answer
+
+### Example Questions
+
+**With Web Search Enabled:**
+- "What's the weather in San Francisco today?"
+- "What is the current price of Bitcoin?"
+- "Best Thai restaurants in San Francisco"
+
+**With Web Search Disabled:**
+- "What is the capital of France?"
+- "Explain quantum computing in simple terms"
+- "What is 25 × 47?"
+
 ## API Endpoints
 
 | Endpoint | Method | Description |
@@ -115,9 +138,12 @@ make dev-frontend
 ```json
 POST /api/query
 {
-  "query": "What are the latest developments in AI?"
+  "query": "What are the latest developments in AI?",
+  "use_web_search": true
 }
 ```
+
+The `use_web_search` parameter is optional and defaults to `true`.
 
 ### Query Response
 
@@ -129,10 +155,11 @@ POST /api/query
 
 ## How It Works
 
-1. **Query Analysis** - The LLM determines if the question requires real-time web data
-2. **Search Query Extraction** - Extracts optimal search terms from the user's question
-3. **Web Scraping** - BrightData fetches Google search results in real-time
-4. **Answer Generation** - The LLM synthesizes search results into a comprehensive answer
+1. **User Control** - User toggles whether to enable web search via the UI checkbox
+2. **Query Analysis** - If web search is enabled, the LLM determines if the question requires real-time web data
+3. **Search Query Extraction** - Extracts optimal search terms from the user's question
+4. **Web Scraping** - BrightData fetches Google search results in real-time
+5. **Answer Generation** - The LLM synthesizes search results into a comprehensive answer (or uses its knowledge base if web search is disabled)
 
 ## Project Structure
 

@@ -89,6 +89,9 @@ function App() {
   
   // History of recent queries (limited to 5)
   const [history, setHistory] = useState<HistoryItem[]>([]);
+  
+  // Web search toggle - controls whether to use BrightData web search
+  const [useWebSearch, setUseWebSearch] = useState(true);
 
   /**
    * handleSubmit - Process user query submission
@@ -132,7 +135,11 @@ function App() {
           'Content-Type': 'application/json',
         },
         // Convert JavaScript object to JSON string
-        body: JSON.stringify({ query: query.trim() }),
+        // Include useWebSearch preference in request body
+        body: JSON.stringify({ 
+          query: query.trim(),
+          use_web_search: useWebSearch 
+        }),
       });
 
       // Parse JSON response body
@@ -190,6 +197,20 @@ function App() {
         <h1>Web Search AI Agent</h1>
         <p className="subtitle">Ask anything and get comprehensive, research-backed answers</p>
         
+        {/* WEB SEARCH TOGGLE */}
+        <div className="checkbox-container" style={{ marginBottom: '1rem' }}>
+          <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+            <input
+              type="checkbox"
+              checked={useWebSearch}
+              onChange={(e) => setUseWebSearch(e.target.checked)}
+              disabled={loading}
+              style={{ cursor: 'pointer', width: '18px', height: '18px' }}
+            />
+            <span style={{ fontSize: '1rem' }}>Web Search</span>
+          </label>
+        </div>
+        
         {/* INPUT FORM */}
         {/* 
           CONTROLLED COMPONENT PATTERN:
@@ -217,7 +238,11 @@ function App() {
         {loading && (
           <div className="loading">
             <div className="spinner"></div>
-            <p>Searching the web and generating your answer...</p>
+            <p>
+              {useWebSearch 
+                ? 'Searching the web and generating your answer...'
+                : 'Generating your answer...'}
+            </p>
           </div>
         )}
 

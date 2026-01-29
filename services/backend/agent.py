@@ -71,7 +71,7 @@ class WebSearchAgent:
         # Initialize the scraper - our "eyes" for the web
         self.scraper = BrightDataScraper(brightdata_token)
 
-    async def run(self, user_query: str) -> str:
+    async def run(self, user_query: str, use_web_search: bool = True) -> str:
         """
         Main entry point - process a user query.
         
@@ -86,16 +86,23 @@ class WebSearchAgent:
         
         Args:
             user_query: The user's question
+            use_web_search: Whether to use web search (defaults to True)
             
         Returns:
             str: The agent's response
         """
-        print(f"\n💭 User Query: {user_query}\n")
+        print(f"\n💭 User Query: {user_query}")
+        print(f"🌐 Web Search: {'ENABLED' if use_web_search else 'DISABLED'}\n")
         
         # INPUT VALIDATION: Always validate at the boundary
         if not user_query or not isinstance(user_query, str) or not user_query.strip():
             print("❌ Invalid user query provided to WebSearchAgent:", user_query)
             return "Error: Invalid query provided."
+
+        # CHECK USER PREFERENCE: If web search is disabled, answer directly
+        if not use_web_search:
+            print("📝 Web search disabled by user - answering directly with LLM...")
+            return await self.llm.generate(user_query)
 
         # ========== STEP 1: REASONING ==========
         # Use LLM to decide if we need to search
