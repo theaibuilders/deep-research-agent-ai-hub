@@ -3,7 +3,7 @@
 ## Overview
 In this tutorial, you'll build a complete **Deep Research AI Agent** — a full-stack application with a Python FastAPI backend and React frontend that can search the web and provide intelligent answers to your questions. The agent uses an LLM to decide when web search is needed, extracts search queries, fetches real-time results via BrightData's SERP API, and synthesizes comprehensive answers using the RAG (Retrieval-Augmented Generation) pattern.
 
-**New Feature:** The application includes a user-controlled "Web Search" checkbox that lets you toggle between:
+The application includes a user-controlled "Web Search" checkbox that lets you toggle between:
 - **Enabled**: Agent searches the web using BrightData and synthesizes information
 - **Disabled**: Agent relies only on the LLM model's knowledge without web search
 
@@ -103,8 +103,6 @@ Create the requirements.txt with the necessary dependencies.
 **Expected Output:**
 A `requirements.txt` file with FastAPI, uvicorn, httpx, python-dotenv, and pydantic.
 
-
-
 ### Prompt 3: Environment Configuration
 
 > **Goal:** Set up environment variables
@@ -120,8 +118,6 @@ Create a .env.example template and a .env file in the backend folder. Also inclu
 **Expected Output:**
 - `.env.example` file with placeholder values
 - `.env` file ready to be filled in
-
-
 
 ### Prompt 4: LLM Client
 
@@ -273,8 +269,6 @@ Make it look polished and professional.
 **Expected Output:**
 An `App.css` file with complete styling.
 
-
-
 ### Prompt 11: Development Commands
 
 > **Goal:** Create convenient commands for development
@@ -292,9 +286,7 @@ Make it easy to get started with just "make install" and "make dev".
 **Expected Output:**
 A `Makefile` with install and dev commands for both services.
 
-
-
-### Prompt 12: Add Web Search Toggle (New Feature)
+### Prompt 12: Add Web Search Toggle
 
 > **Goal:** Add user control over web search functionality
 
@@ -354,8 +346,6 @@ deep-research-agent/
 │       └── vite.config.ts
 └── Makefile
 ```
-
-
 
 ## Running the Project
 
@@ -450,8 +440,6 @@ The agent.py file has an error on line X: [error message]
 Please fix this error. The issue seems to be [your observation].
 ```
 
-
-
 ## Best Practices for Vibe Coding
 
 ### 1. Be Specific and Detailed
@@ -532,8 +520,6 @@ The agent uses RAG to ground LLM responses in real data:
 - **FastAPI Docs**: https://fastapi.tiangolo.com
 - **React Docs**: https://react.dev
 - **Vite Docs**: https://vitejs.dev
-
-
 
 ## Congratulations! 🎉
 
