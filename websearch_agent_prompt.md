@@ -354,7 +354,7 @@ Basic reset styles (can be minimal since App.css handles most styling).
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Deep Research AI Agent</title>
+    <title>Web Search AI Agent</title>
   </head>
   <body>
     <div id="root"></div>

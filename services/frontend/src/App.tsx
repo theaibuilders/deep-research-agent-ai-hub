@@ -187,7 +187,7 @@ function App() {
     <div className="app">
       <div className="container">
         {/* HEADER */}
-        <h1>🔬 Deep Research AI Agent</h1>
+        <h1>Web Search AI Agent</h1>
         <p className="subtitle">Ask anything and get comprehensive, research-backed answers</p>
         
         {/* INPUT FORM */}
